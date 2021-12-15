@@ -7,7 +7,8 @@ import uvicorn
 # from fastapi_sqlalchemy import DBSessionMiddleware
 from app.main import create_dev_app
 from app.config import settings
-from app.models.dbconnect import async_main
+from app.models.dbconnect import async_main,droptables
+##
 capp = typer.Typer()
 app=create_dev_app()
 # app.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_MIGRATION_URI)
@@ -24,7 +25,11 @@ def test():
     typer.run('pytest -v')
 @capp.command()
 def run():
-    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=5000,log_level="info")
+    # hypercorn.run(app, host="0.0.0.0", port=5000,reload=True,log_level="info")
+@capp.command()
+def drop():
+    asyncio.run(droptables())
 
 if __name__ == "__main__":
     capp()

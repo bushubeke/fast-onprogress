@@ -1,13 +1,27 @@
 from .dbconnect import Base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import Boolean, DateTime, Column, Integer,String, ForeignKey
-import datetime
+# import datetime
+# from datetime import tzinfo, timedelta, datetime
+from sqlalchemy.sql import func
 import uuid
 from typing import List, Optional
 from pydantic import BaseModel,EmailStr
 # from fastapi import Form  
 from sqlalchemy.dialects.postgresql import ENUM, JSON,UUID
 from sqlalchemy.ext.mutable import MutableDict
+###########################################################################
+# ZERO = timedelta(0)
+
+# class UTC(tzinfo):
+#   def utcoffset(self, dt):
+#     return ZERO
+#   def tzname(self, dt):
+#     return "UTC"
+#   def dst(self, dt):
+#     return ZERO
+
+# utc = UTC()
 
 #############################################################################
     #this is roles table along with its methods
@@ -48,7 +62,8 @@ class User(Base):
     middle_name = Column(String(100),nullable=False)
     last_name= Column(String(100),nullable=False)
     password = Column(String(500),nullable=False)
-    date_registerd=Column(DateTime(),default=datetime.datetime.now())
+    # date_registerd=Column(DateTime(),default=datetime.datetime.now().astimezone())
+    date_registerd=Column(DateTime(timezone=True), default=func.now())
     confirmed_at=Column(DateTime(),nullable=True)
     active = Column(Boolean(),default=False)
     roles = relationship('Role', secondary='roles_users',backref=backref('users',cascade="all", lazy='dynamic'))
@@ -70,8 +85,8 @@ class UserModel(BaseModel):
     middle_name : Optional[str] = None 
     last_name : str 
     password : str 
-    date_registerd : datetime.datetime
-    confirmed_at : Optional[datetime.datetime] 
+    # date_registerd : datetime.datetime
+    # confirmed_at : Optional[datetime.datetime] 
     active :Optional[bool] 
     
     class Config:

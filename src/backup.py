@@ -385,3 +385,98 @@ def token_decode(data,key):
 #  exp=datetime.datetime.utcnow()+datetime.timedelta(hours=5) 
 
 #####################################################################
+
+
+if data.get("password") is not None:
+                        
+                        data["password"]=pbkdf2_sha512.using(rounds=25000,salt_size=80).hash(data['password'])
+                   try:
+                        #print("3 \n")
+                        db_model_value=current_sql_model(**data)
+                        #print("4 \n")
+                        session.add(db_model_value)
+                        await session.commit()
+                        #session.refresh(db_model_value)
+                        #print("5 \n")
+                        
+                   except Exception as e :
+                         #print("6 \n")
+                         print(e)
+                         await session.rollback()
+                         #print("7 \n")
+                        
+                   finally: 
+                         #print("8 \n")
+                         await session.close()
+                         #print("9 \n")
+                   #print("10 \n")
+                   return data
+              return post_response
+
+##########################################################################
+# curl -X 'PUT'  'http://192.168.10.9:5000/user/d9bc7695-82c8-4ef5-8011-314117c38a92'  -H 'accept: application/json'
+          # curl -X 'PUT'  'http://192.168.10.9:5000/d9bc7695-82c8-4ef5-8011-314117c38a92' -H 'accept: application/json' -H 'Content-Type: application/json'  -d '{
+          # "email": "beimdegefu@yahoo.com", "username": "bushubeke",  "first_name": "Beimnet",  "middle_name": "Bekele",  
+          # "last_name": "Degefu",  "password": "bushu1234","active": true}'
+
+{
+  "email": "bushu@example.com",
+  "username": "Essey",
+  "first_name": "Essey",
+  "middle_name": "Bekele",
+  "last_name": "Degefu",
+  "password": "bushu1234",
+  "active": true
+}
+
+
+                try:
+                    await session.execute(delete(current_sql_model).where(current_sql_model.id==item_uuid)
+                    await session.commit()
+                    return  { f"Message" : f"sucessfully deleted object "}
+                except Exception as e:
+                    print(e)
+                    await session.rollback()
+                    return  { f"Message" : f"sucessfully deleted object "}
+                finally:
+                    await session.close() 
+
+
+[
+  {
+    "email": "beimdegefu@gmail.com",
+    "username": "bushu",
+    "middle_name": "Bekele",
+    "password": "bushu1234",
+    "confirmed_at": null,
+    "first_name": "Beimnet",
+    "id": "5990b908-1174-4581-913f-7f9128c5c888",
+    "last_name": "Degefu",
+    "date_registerd": "2021-11-05T11:16:29.348583+00:00",
+    "active": true
+  },
+  {
+    "email": "beimdegefu@yahoo.com",
+    "username": "bushubeke",
+    "middle_name": "Bekele",
+    "password": "bushu1234",
+    "confirmed_at": null,
+    "first_name": "Beimnet",
+    "id": "e54bb2db-588c-4b88-b035-1d160c8b7daa",
+    "last_name": "Degefu",
+    "date_registerd": "2021-11-05T11:16:49.968890+00:00",
+    "active": true
+  },
+  {
+    "email": "amlakawit@gmail.com",
+    "username": "mititi",
+    "middle_name": "Bekele",
+    "password": "bushu12345",
+    "confirmed_at": null,
+    "first_name": "Amlakawit",
+    "id": "f0d17873-051b-4da8-bd7d-049755f5f6f3",
+    "last_name": "Degefu",
+    "date_registerd": "2021-11-05T14:28:08.612417+00:00",
+    "active": true
+  }
+]
